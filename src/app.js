@@ -1,57 +1,38 @@
-const ProductManager = require("./entregable"); 
-
-const express = require("express");
-
+const express = require('express');
 const app = express();
+const fs = require('fs/promises');
+const ProductManager = require('./managers/productManager');  
+const CartManager = require('./managers/cartManager');
 
-const filename = `${__dirname}/../assets/Productos.json`; 
+const productRoutes = require('./routes/products');
+const cartRoutes = require('./routes/cart');
 
-const productManager = new ProductManager(filename);
+const productsFilename = `${__dirname}/../assets/productos.json`;
+const cartsFilename = `${__dirname}/../assets/Carritos.json`;
 
-// Devolver listado de productos
-app.get("/products", async (_, res) => {
-  try {
-    const products = await productManager.getProducts();
-    res.json(products);
-    return;
-  } catch (err) {
-    res.json({ error: "Error al obtener productos" });
-    throw err;
-  }
-});
+// Crear instancias de los managers
+const productManager = new ProductManager(productsFilename);
+const cartManager = new CartManager(cartsFilename, productManager); //esta intancia esta oscura como si no se utilizara
 
-// Devolver un producto por ID
-app.get("/products/:pid", async (req, res) => {
-  try {
-    const productId = parseInt(req.params.pid);
-    const product = await productManager.getProductById(productId);
+productManager.loadProductsFromFile()
+  .then(() => {
+    return productManager.initialize();
+  })
+  .then(() => {
+    // Configurar rutas después de cargar productos
+    app.use(express.json());
+    app.use('/api/products', productRoutes);
+    app.use('/api/carts', cartRoutes);
 
-    if (!product) {
-      res.json({ error: 'Producto inexistente con ID ' + req.params.pid });
-      return;
-    }
-
-    res.json(product);
-    return;
-  } catch (err) {
-    res.json({ error: "Error al obtener producto con ID " + req.params.pid });
-    throw err;
-  }
-});
-
-app.get("/test", (_, res) => {
-  res.end("Hola tester");
-});
-
-const main = async () => {
-  try {
-     
-    app.listen(8080, () => {
-      console.log("Servidor listo en el puerto 8080!");
+    app.get('/', (_, res) => {
+      res.send('¡Bienvenido a la aplicación!');
     });
-  } catch (error) {
-    console.error("Error al iniciar:", error);
-  }
-};
 
-main();
+    const PORT = process.env.PORT || 8080;
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error('Error en la inicialización:', error.message);
+  });
