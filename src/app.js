@@ -10,16 +10,16 @@ const cartRoutes = require('./routes/cart');
 const productsFilename = `${__dirname}/../assets/productos.json`;
 const cartsFilename = `${__dirname}/../assets/Carritos.json`;
 
-// Crear instancias de los managers
+
 const productManager = new ProductManager(productsFilename);
-const cartManager = new CartManager(cartsFilename, productManager); //esta intancia esta oscura como si no se utilizara
+const cartManager = new CartManager(cartsFilename, productManager); 
 
 productManager.loadProductsFromFile()
   .then(() => {
     return productManager.initialize();
   })
   .then(() => {
-    // Configurar rutas después de cargar productos
+    
     app.use(express.json());
     app.use('/api/products', productRoutes);
     app.use('/api/carts', cartRoutes);

@@ -164,7 +164,7 @@ const fs = require('fs/promises');
     try {
       const productManager = new ProductManager(path.join(__dirname, '../../assets/productos.json'));
 
-     // await productManager.loadProductsFromFile();
+     
       
       await productManager.initialize();
       

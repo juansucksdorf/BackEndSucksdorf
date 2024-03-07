@@ -114,7 +114,7 @@ async saveCartsToFile(carts) {
       const carts = await this.getCarts();
       console.log("Lista de carritos:", carts);
 
-      const cartId = parseInt(id); // Convierte el id a un número si es necesario
+      const cartId = parseInt(id); 
       const cart = carts.find((cart) => cart.id === cartId);
 
       if (cart) {
@@ -148,7 +148,7 @@ async updateCart(cartId, updateData) {
     const cartIndex = carts.findIndex((cart) => cart.id === cartId);
 
     if (cartIndex !== -1) {
-      // Actualizar el carrito con los datos proporcionados en el cuerpo de la solicitud
+      
       const updatedCart = { ...carts[cartIndex], ...updateData };
       carts[cartIndex] = updatedCart;
 
