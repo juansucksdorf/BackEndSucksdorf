@@ -2,8 +2,12 @@ const express = require('express');
 const router = express.Router();
 const ProductManager = require('../managers/productManager');
 const path = require('path');
-const filename = path.join(__dirname, '../../assets/productos.json');
-const productManager = new ProductManager(filename);
+
+// Ruta al archivo JSON de productos
+const productsFilePath = path.join(__dirname, '../../assets/productos.json');
+
+//const filename = path.join(__dirname, '../../assets/productos.json');
+const productManager = new ProductManager(productsFilePath);
 
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
@@ -34,7 +38,7 @@ router.get('/:pid', async (req, res) => {
   }
 });
 
-router.post('/add', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const newProduct = req.body;
     
@@ -46,7 +50,8 @@ router.post('/add', async (req, res) => {
     newProduct.status = true;
 
     await productManager.addProduct(newProduct);
-    res.status(201).json({ message: 'Producto agregado correctamente.' });
+    // Redirigir al cliente a la página realTimeProducts después de agregar el producto
+    res.redirect('/api/realTimeProducts');
   } catch (err) {
     res.status(500).json({ error: 'Error al agregar producto.', message: err.message });
   }

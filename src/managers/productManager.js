@@ -1,13 +1,13 @@
 const fs = require('fs/promises');
-  const path = require('path');
+const path = require('path');
+const productsFilePath = path.join(__dirname, '../../assets/productos.json');
 
-  class ProductManager {
-    constructor(productsFilePath) {
-      this.productsPath = productsFilePath;
-      this.products = [];
-      this.loadProductsFromFile()
-      
-    }
+class ProductManager {
+  constructor(productsFilePath) {
+    this.productsPath = productsFilePath;
+    this.products = [];
+    this.loadProductsFromFile();
+  }
     async initialize() {
       try {
         console.log('Iniciando ProductManager...');
@@ -49,7 +49,7 @@ const fs = require('fs/promises');
             // Guardar el array actualizado en el archivo
             await this.saveProductsToFile();
 
-            
+            console.log('Producto agregado correctamente:', nuevoProducto);
           }
         } else {
           console.error('Todos los campos son obligatorios');
@@ -159,10 +159,11 @@ const fs = require('fs/promises');
       return this.products;
     }
   }
+  
 
   async function main() {
     try {
-      const productManager = new ProductManager(path.join(__dirname, '../../assets/productos.json'));
+      const productManager = new ProductManager(productsFilePath);
 
      
       
@@ -270,12 +271,12 @@ const fs = require('fs/promises');
       });
         
         
-        const productos = await productManager.getProducts();
-        console.log('Productos:', productos);
-      } catch (error) {
-        console.error('Error en la función main:', error.message);
-      }
+     
+    
+    } catch (error) {
+      console.error('Error en la función main:', error.message);
     }
+  }
     
 
   main();

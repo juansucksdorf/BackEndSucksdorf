@@ -4,7 +4,7 @@
     "title": "Producto 1",
     "description": "Descripción del Producto 1",
     "price": 3500,
-    "thumbnail": "imagen1.jpg",
+    "thumbnail": "img/bolsillero1.jpg.jpeg",
     "code": "P001",
     "stock": 70
   },
@@ -13,7 +13,7 @@
     "title": "Producto 2",
     "description": "Descripción del Producto 2",
     "price": 30050,
-    "thumbnail": "imagen2.jpg",
+    "thumbnail": "img/bolsillero1.jpg.jpeg",
     "code": "P002",
     "stock": 50
   },
@@ -22,7 +22,7 @@
     "title": "Producto 3",
     "description": "Descripción del Producto 3",
     "price": 3000,
-    "thumbnail": "imagen3.jpg",
+    "thumbnail": "img/bolsillero1.jpg.jpeg",
     "code": "P003",
     "stock": 50
   },
@@ -31,7 +31,7 @@
     "title": "Producto 4",
     "description": "Descripción del Producto 4",
     "price": 3000,
-    "thumbnail": "imagen4.jpg",
+    "thumbnail": "img/bolsillero1.jpg.jpeg",
     "code": "P004",
     "stock": 50
   },
@@ -40,7 +40,7 @@
     "title": "Producto 5",
     "description": "Descripción del Producto 5",
     "price": 35000,
-    "thumbnail": "imagen5.jpg",
+    "thumbnail": "img/bolsillero1.jpg.jpeg",
     "code": "P005",
     "stock": 50
   },
@@ -49,7 +49,7 @@
     "title": "Producto 6",
     "description": "Descripción del Producto 6",
     "price": 37000,
-    "thumbnail": "imagen6.jpg",
+    "thumbnail": "img/bolsillero1.jpg.jpeg",
     "code": "P006",
     "stock": 40
   },
@@ -58,7 +58,7 @@
     "title": "Producto 7",
     "description": "Descripción del Producto 7",
     "price": 3000,
-    "thumbnail": "imagen7.jpg",
+    "thumbnail": "img/bolsillero1.jpg.jpeg",
     "code": "P007",
     "stock": 50
   },
@@ -67,7 +67,7 @@
     "title": "Producto 8",
     "description": "Descripción del Producto 8",
     "price": 3000,
-    "thumbnail": "imagen81.jpg",
+    "thumbnail": "img/bolsillero1.jpg.jpeg",
     "code": "P008",
     "stock": 50
   },
@@ -76,7 +76,7 @@
     "title": "Producto 9",
     "description": "Descripción del Producto 9",
     "price": 3000,
-    "thumbnail": "imagen9.jpg",
+    "thumbnail": "img/bolsillero1.jpg.jpeg",
     "code": "P009",
     "stock": 50
   },
@@ -85,8 +85,134 @@
     "title": "Producto 10",
     "description": "Descripción del Producto 10",
     "price": 3000,
-    "thumbnail": "imagen10.jpg",
+    "thumbnail": "img/bolsillero1.jpg.jpeg",
     "code": "P0010",
     "stock": 50
+  },
+  {
+    "id": 11,
+    "title": "test",
+    "description": "sdf",
+    "price": "5",
+    "thumbnail": "./img/bolsillero1.jpg.jpeg",
+    "code": "as",
+    "stock": "5"
+  },
+  {
+    "id": 12,
+    "title": "producto 12",
+    "description": "descripcion producto 12",
+    "price": "52",
+    "thumbnail": "./img/bolsillero1.jpg.jpeg",
+    "code": "5552236",
+    "stock": "50"
+  },
+  {
+    "id": 13,
+    "title": "producto 13",
+    "description": "desc prod 13",
+    "price": "1000",
+    "thumbnail": ".img/imagen",
+    "code": "5522",
+    "stock": "10"
+  },
+  {
+    "id": 14,
+    "title": "producto 14",
+    "description": "test",
+    "price": "55",
+    "thumbnail": "test",
+    "code": "15",
+    "stock": "2"
+  },
+  {
+    "id": 15,
+    "title": "producto 15",
+    "description": "prod 15",
+    "price": "2000",
+    "thumbnail": "image",
+    "code": "p35",
+    "stock": "50"
+  },
+  {
+    "id": 16,
+    "title": "producto 16",
+    "description": "16",
+    "price": "16",
+    "thumbnail": "16",
+    "code": "16",
+    "stock": "16"
+  },
+  {
+    "id": 17,
+    "title": "prod 17",
+    "description": "17",
+    "price": "500",
+    "thumbnail": "image",
+    "code": "pasd56",
+    "stock": "20"
+  },
+  {
+    "id": 18,
+    "title": "producto 18",
+    "description": "desc prod 18",
+    "price": "3000",
+    "thumbnail": "image",
+    "code": "p6452",
+    "stock": "10"
+  },
+  {
+    "id": 19,
+    "title": "19",
+    "description": "19",
+    "price": "19",
+    "thumbnail": "19",
+    "code": "19",
+    "stock": "19"
+  },
+  {
+    "id": 20,
+    "title": "20",
+    "description": "20",
+    "price": "20",
+    "thumbnail": "20",
+    "code": "20",
+    "stock": "20"
+  },
+  {
+    "id": 21,
+    "title": "21",
+    "description": "21",
+    "price": "21",
+    "thumbnail": "21",
+    "code": "21",
+    "stock": "50"
+  },
+  {
+    "id": 22,
+    "title": "22",
+    "description": "22",
+    "price": "22",
+    "thumbnail": "22",
+    "code": "22",
+    "stock": "22"
+  },
+  {
+    "id": 23,
+    "title": "23",
+    "description": "23",
+    "price": "23",
+    "thumbnail": "23",
+    "code": "23",
+    "stock": "23"
+  },
+  {
+    "id": 24,
+    "title": "24",
+    "description": "24",
+    "price": "24",
+    "thumbnail": "24",
+    "code": "24",
+    "stock": "24"
   }
 ]

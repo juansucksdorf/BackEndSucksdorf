@@ -173,7 +173,7 @@ async function main() {
     );
 
     const cartManager = new CartManager(
-      path.join(__dirname, "../assets/Carritos.json"),
+      path.join(__dirname, "../../assets/Carritos.json"),
       productManager
     );
     await cartManager.initialize();
