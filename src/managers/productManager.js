@@ -8,6 +8,8 @@ class ProductManager {
     this.products = [];
     this.loadProductsFromFile();
   }
+  //func inicio productM
+  
     async initialize() {
       try {
         console.log('Iniciando ProductManager...');

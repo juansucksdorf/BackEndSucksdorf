@@ -7,7 +7,8 @@
     "thumbnail": "img/bolsillero1.jpg.jpeg",
     "code": "P001",
     "stock": 70
-  },
+  }
+  ,
   {
     "id": 2,
     "title": "Producto 2",

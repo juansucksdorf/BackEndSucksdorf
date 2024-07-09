@@ -14,6 +14,7 @@ const cartsFilePath = path.join(__dirname, '../../assets/Carritos.json');
 const cartManager = new CartManager(cartsFilePath, productManager);
 
 
+
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
 

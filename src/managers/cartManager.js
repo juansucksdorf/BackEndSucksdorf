@@ -10,7 +10,7 @@ class CartManager {
     this.productManager = productManager;
     this.cart = [];
   }
-
+//funcion para iniciar el cartM
   async initialize() {
     try {
       console.log("Iniciando CartManager...");

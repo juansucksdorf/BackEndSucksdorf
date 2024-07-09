@@ -5,6 +5,7 @@ const path = require('path');
 const filename = path.join(__dirname, '../../assets/productos.json');
 const productManager = new ProductManager(filename);
 
+
 router.get('/', async (_, res) => {
     try {
         const products = await productManager.getProducts();

@@ -3,6 +3,7 @@ const router = express.Router();
 const ProductManager = require('../managers/productManager');
 const path = require('path');
 
+
 // Ruta al archivo JSON de productos
 const productsFilePath = path.join(__dirname, '../../assets/productos.json');
 

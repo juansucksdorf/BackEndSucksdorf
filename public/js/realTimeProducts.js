@@ -1,6 +1,7 @@
 const socket = io();
 
 
+
 socket.on('newProduct', (newProduct) => {
     console.log('Nuevo producto recibido:', newProduct); 
 
