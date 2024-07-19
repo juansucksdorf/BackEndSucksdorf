@@ -13,13 +13,13 @@ const io = socketIO(server);
 const handlebars = require('express-handlebars');
 const { Server } = require('socket.io');
 //managers
-const ProductManager = require('./managers/productManager');
-const CartManager = require('./managers/cartManager');
+const ProductManager = require('./src/managers/productManager');
+const CartManager = require('./src/managers/cartManager');
 //routes
-const homeRoutes = require('./routes/home')
-const productRoutes = require('./routes/products');
-const cartRoutes = require('./routes/cart');
-const realTimeProductsR = require('./routes/realTimeProducts.router');
+const homeRoutes = require('./src/routes/home')
+const productRoutes = require('./src/routes/products');
+const cartRoutes = require('./src/routes/cart');
+const realTimeProductsR = require('./src/routes/realTimeProducts.router');
 
 //filename
 const productsFilename = `${__dirname}/../assets/productos.json`;
