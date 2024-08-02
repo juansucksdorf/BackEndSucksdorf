@@ -1,56 +1,61 @@
 const express = require('express');
 const path = require('path');
 const { create } = require('express-handlebars');
+const cookieParser = require('cookie-parser');
+const { connectMongoDB } = require('./src/config/mongoDb.config');
+const realTimeProductsRouter = require('./src/routes/realTimeProducts.router');
+
+// Crear instancia de Express
 const app = express();
+// Middleware para servir archivos estáticos
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // Configurar Handlebars
 const hbs = create({
   layoutsDir: path.join(__dirname, 'src/views/layouts'),
-  defaultLayout: 'main'
+  defaultLayout: 'main',
+  runtimeOptions: {
+    allowProtoMethodsByDefault: true,
+    allowProtoPropertiesByDefault: true,
+  }
 });
-
 app.engine('handlebars', hbs.engine);
 app.set('views', path.join(__dirname, 'src/views'));
 app.set('view engine', 'handlebars');
 
-// Middleware para servir archivos estáticos
-app.use(express.static(path.join(__dirname, 'public')));
+
+// Inicializar MongoDB
+connectMongoDB();
 
 // Rutas para las APIs
-const homeRoutes = require('./src/routes/home');
-const productRoutes = require('./src/routes/products');
-const cartRoutes = require('./src/routes/cart');
-const realTimeProductsR = require('./src/routes/realTimeProducts.router');
-app.use('/api/realTimeProducts', realTimeProductsR);
+app.use('/api/realTimeProducts', realTimeProductsRouter);
 
-const ProductManager = require('./src/managers/productManager');
-const CartManager = require('./src/managers/cartManager');
-const productsFilename = path.join(__dirname, 'assets/productos.json');
-const cartsFilename = path.join(__dirname, 'assets/Carritos.json');
+// Ruta raíz
+app.get('/', async (req, res) => {
+  try {
+    const { page = 1, limit = 10, sort, query } = req.query;
+    const products = await productDao.getAll(page, limit, query, sort);
 
-const productManager = new ProductManager(productsFilename);
-const cartManager = new CartManager(cartsFilename, productManager);
-
-productManager.loadProductsFromFile()
-  .then(() => productManager.initialize())
-  .then(() => {
-    app.use(express.json());
-    app.use('/api/products', productRoutes);
-    app.use('/api/carts', cartRoutes);
-    app.use('/api/home', homeRoutes);
-
-    // Ruta principal
-    app.get('/', (req, res) => {
-      res.render('index', {
-        title: 'websockets',
-        useWS: true,
-        products: [] 
-      });
+    res.render('index', {
+      title: 'Productos',
+      useWS: false,
+      products: products.docs,
+      pagination: {
+        hasNextPage: products.hasNextPage,
+        hasPrevPage: products.hasPrevPage,
+        nextPage: products.nextPage,
+        prevPage: products.prevPage,
+        limit: products.limit
+      }
     });
-  })
-  .catch((error) => {
-    console.error('Error en la inicialización:', error.message);
-  });
+  } catch (err) {
+    console.error('Error al obtener productos:', err.message);
+    res.status(500).send('Error al obtener productos');
+  }
+});
 
 // Iniciar el servidor
 const server = app.listen(8080, () => {
@@ -69,3 +74,11 @@ wsServer.on('connection', (socket) => {
     console.log('Nuevo producto agregado', product);
   });
 });
+
+// Middleware de manejo de errores
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ success: false, error: 'Error en el servidor', message: err.message });
+});
+
+module.exports = app;

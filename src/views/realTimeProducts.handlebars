@@ -1,55 +1,48 @@
-<div class="form">
-    <form action="/api/products" id="productForm" method="post" enctype="application/x-www-form-urlencoded">
-        <legend>Agregar un producto</legend>
-        <div>
-            <label>Titulo:</label>
-            <input type="text" id="productTitle" name="title">
-        </div>
-        <div>
-            <label>Descripcion:</label>
-            <input type="text" id="productDescription" name="description">
-        </div>
-        <div>
-            
-            <label>Precio:</label>
-            <input type="text" id="productPrice" name="price">
-        </div>
-        <div>
-            <label>Imagen:</label>
-            <input type="text" id="productThumbnail" name="thumbnail">
-        </div>
-        <div>
-            <label>Codigo:</label>
-            <input type="text" id="productCode" name="code">
-        </div>
-        <div>
-            <label>Estado:</label>
-            <label>Verdadero:</label>
-            <input type="radio" name="status" id="productStatusTrue">
-            <label> Falso</label>
-            <input type="radio" name="status" id="productStatusFalse">
-        </div>
-        <div>
-            <label> stock:</label>
-            <input type="number" id="productStock" name="stock">
-        </div>
-        <input type="submit" id="addProduct" value="agregar">
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{titlePage}}</title>
+    {{#each style}}
+    <link rel="stylesheet" href="/styles/{{this}}">
+    {{/each}}
+</head>
+<body>
+    <h1>{{h1}}</h1>
+    <form id="productForm" method="post" action="/api/realTimeProducts">
+        <input type="text" name="title" placeholder="Título" required>
+        <input type="text" name="description" placeholder="Descripción" required>
+        <input type="number" name="price" placeholder="Precio" required>
+        <input type="text" name="thumbnail" placeholder="URL de la imagen" required>
+        <input type="text" name="code" placeholder="Código" required>
+        <input type="text" name="status" placeholder="Estado (true/false)" required>
+        <input type="number" name="stock" placeholder="Stock" required>
+        <button type="submit">Agregar Producto</button>
     </form>
-</div>
 
-<div class="container" id="productsFeed">
-{{#each products}}
-<div class="product">
-    <h4>{{title}} </h4>
-    <img src="{{thumbnail}}" alt="imagen de {{title}}">
-    <div class="infoProduct">
-        <p> {{description}} </p>
-        <p>{{price}} </p>
-        <p>{{stock}} </p>
-        <p>{{code}} </p>
+    <div id="productList">
+        {{#each products}}
+        <div class="product-card">
+            <h4>{{title}}</h4>
+            <img src="{{thumbnail}}" alt="Imagen de {{title}}">
+            <div class="info">
+                <p>{{description}}</p>
+                <p>Precio: ${{price}}</p>
+                <p>Stock: {{stock}}</p>
+                <p>Código: {{code}}</p>
+                <p>Categoría: {{category}}</p>
+            </div>
+            <div class="buttons">
+                <button class="btn-cart" onclick="addToCart('{{_id}}')">Agregar al carrito</button>
+                <a href="/products/{{_id}}" class="btn-details">Ver detalles</a>
+            </div>
+        </div>
+        {{/each}}
     </div>
 
-</div>
-{{/each}}
-</div>
+    {{#each script}}
+    <script src="/scripts/{{this}}"></script>
+    {{/each}}
+</body>
+</html>

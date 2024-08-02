@@ -1,92 +1,93 @@
 const express = require('express');
 const router = express.Router();
-const ProductManager = require('../managers/productManager');
-const path = require('path');
-
-
-// Ruta al archivo JSON de productos
-const productsFilePath = path.join(__dirname, '../../assets/productos.json');
-
-//const filename = path.join(__dirname, '../../assets/productos.json');
-const productManager = new ProductManager(productsFilePath);
+const productDao = require('../dao/product.dao');
+const cartDao = require('../dao/cart.dao'); 
 
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
 
-router.get('/', async (_, res) => {
-  try {
-    const products = await productManager.getProducts();
-    console.log('Productos:', products); 
-    res.status(200).json(products);
-  } catch (err) {
-    res.status(500).json({ error: 'Error retrieving products', message: err.message });
-  }
+router.get('/', async (req, res) => {
+    try {
+        const { page = 1, limit = 10, sort, query } = req.query;
+        const products = await productDao.getAll(page, limit, query, sort);
+
+        // Renderizar la vista 'products' pasando los productos y otros datos necesarios
+        res.render('products', { products: products.docs, totalPages: products.totalPages, currentPage: products.page });
+    } catch (error) {
+        res.status(500).render('error', { message: 'Error al obtener productos', error: error.message });
+    }
 });
 
 router.get('/:pid', async (req, res) => {
-  try {
-    const productId = parseInt(req.params.pid);
-    const product = await productManager.getProductById(productId);
+    try {
+        const productId = req.params.pid;
+        console.log('Product ID recibido:', productId); // Para depuración
+        const product = await productDao.getById(productId);
 
-    if (!product) {
-      res.status(404).json({ error: 'Producto inexistente con ID ' + req.params.pid });
-      return;
+        if (!product) {
+            res.status(404).render('productDetails', { product: null, message: 'Producto no encontrado' });
+            return;
+        }
+
+        res.render('productDetails', { product });
+    } catch (err) {
+        console.error('Error al obtener producto por ID:', err.message);
+        res.status(500).render('productDetails', { product: null, message: 'Error al obtener el producto' });
     }
-
-    res.status(200).json(product);
-  } catch (err) {
-    res.status(500).json({ error: 'Error al obtener producto con ID ' + req.params.pid, message: err.message });
-  }
 });
 
 router.post('/', async (req, res) => {
-  try {
-    const newProduct = req.body;
-    
-    // Validar si los campos requeridos están presentes en la solicitud
-    if (!newProduct.title || !newProduct.description || !newProduct.price || !newProduct.thumbnail || !newProduct.code || !newProduct.stock) {
-      res.status(400).json({ error: 'Todos los campos son obligatorios.' });
-      return;
+    try {
+        const newProduct = await productDao.create(req.body);
+        res.status(201).json(newProduct);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al agregar producto', message: error.message });
     }
-    newProduct.status = true;
-
-    await productManager.addProduct(newProduct);
-    // Redirigir al cliente a la página realTimeProducts después de agregar el producto
-    res.redirect('/api/realTimeProducts');
-  } catch (err) {
-    res.status(500).json({ error: 'Error al agregar producto.', message: err.message });
-  }
 });
 
 router.put('/:pid', async (req, res) => {
-  try {
-    const productId = parseInt(req.params.pid);
-    const updatedFields = req.body;
-    
-    // Validar si los campos requeridos están presentes en la solicitud
-    if (Object.keys(updatedFields).length === 0) {
-      res.status(400).json({ error: 'Se requieren campos para actualizar el producto.' });
-      return;
+    try {
+        const productId = req.params.pid;
+        const updatedFields = req.body;
+
+        if (Object.keys(updatedFields).length === 0) {
+            res.status(400).json({ error: 'Se requieren campos para actualizar el producto.' });
+            return;
+        }
+
+        if ('quantity' in updatedFields) {
+            delete updatedFields.quantity;
+        }
+
+        await productDao.update(productId, updatedFields);
+        res.status(200).json({ message: 'Producto actualizado correctamente.' });
+    } catch (err) {
+        res.status(500).json({ error: 'Error al actualizar el producto.', message: err.message });
     }
-    if ('quantity' in updatedFields) {
-     
-      delete updatedFields.quantity;
-    }
-    await productManager.updateProduct(productId, updatedFields);
-    res.status(200).json({ message: 'Producto actualizado correctamente.' });
-  } catch (err) {
-    res.status(500).json({ error: 'Error al actualizar el producto.', message: err.message });
-  }
 });
 
 router.delete('/:pid', async (req, res) => {
-  try {
-    const productId = parseInt(req.params.pid);
-    await productManager.deleteProduct(productId);
-    res.status(200).json({ message: 'Producto eliminado correctamente.' });
-  } catch (err) {
-    res.status(500).json({ error: 'Error al eliminar el producto.', message: err.message });
-  }
+    try {
+        const productId = req.params.pid;
+        await productDao.remove(productId);
+        res.status(200).json({ message: 'Producto eliminado correctamente.' });
+    } catch (err) {
+        res.status(500).json({ error: 'Error al eliminar el producto.', message: err.message });
+    }
+});
+
+router.post('/carts/:cid/products/:pid', async (req, res) => {
+    try {
+        const cartId = req.params.cid;
+        const productId = req.params.pid;
+        const quantity = parseInt(req.body.quantity, 10) || 1;
+
+        await cartDao.addProductToCart(cartId, productId, quantity);
+
+        res.status(200).json({ message: 'Producto agregado al carrito correctamente.' });
+    } catch (err) {
+        res.status(500).json({ error: 'Error al agregar producto al carrito.', message: err.message });
+    }
 });
 
 module.exports = router;

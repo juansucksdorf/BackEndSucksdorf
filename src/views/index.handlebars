@@ -1,73 +1,75 @@
-
-{{#extends 'layouts/main'}}
-
-
-{{#content 'body'}}
-    <div class="container">
-        {{#each products}}
-        <div class="product">
-            <h4>{{title}}</h4>
-            <img src="{{thumbnail}}" alt="imagen de {{title}}">
-            <div class="infoProduct">
-                <p>{{description}}</p>
-                <p>Precio: {{price}}</p>
-                <p>Stock: {{stock}}</p>
-                <p>Codigo: {{code}}</p>
-            </div>
+<!-- Vista de productos -->
+<div class="container">
+    <!-- Mostrar productos -->
+    {{#each products.docs}}
+    <div class="product">
+        <h4>{{title}}</h4>
+        <img src="{{thumbnail}}" alt="imagen de {{title}}">
+        <div class="infoProduct">
+            <p>{{description}}</p>
+            <p>Precio: ${{price}}</p>
+            <p>Stock: {{stock}}</p>
+            <p>Código: {{code}}</p>
+            <p>Categoría: {{category}}</p> 
         </div>
-        {{/each}}
+        <a href="/products/{{_id}}" class="btn-details">Ver detalles</a>
+        <button onclick="addToCart('{{_id}}', 1)">Agregar al carrito</button>
     </div>
+    {{/each}}
+</div>
 
-    <div class="form">
-        <form action="/api/products" id="productForm" method="post" enctype="application/x-www-form-urlencoded">
-            <legend>Agregar un producto</legend>
-            <div>
-                <label>Titulo:</label>
-                <input type="text" id="productTitle" name="title">
-            </div>
-            <div>
-                <label>Descripcion:</label>
-                <input type="text" id="productDescription" name="description">
-            </div>
-            <div>
-                <label>Precio:</label>
-                <input type="text" id="productPrice" name="price">
-            </div>
-            <div>
-                <label>Imagen:</label>
-                <input type="text" id="productThumbnail" name="thumbnail">
-            </div>
-            <div>
-                <label>Codigo:</label>
-                <input type="text" id="productCode" name="code">
-            </div>
-            <div>
-                <label>Estado:</label>
-                <label>Verdadero:</label>
-                <input type="radio" name="status" id="productStatusTrue">
-                <label>Falso</label>
-                <input type="radio" name="status" id="productStatusFalse">
-            </div>
-            <div>
-                <label>Stock:</label>
-                <input type="number" id="productStock" name="stock">
-            </div>
-            <input type="submit" id="addProduct" value="Agregar">
-        </form>
-    </div>
+<!-- Paginación -->
+<div class="pagination">
+    {{#if products.hasPrevPage}}
+        <a href="/products?page={{products.prevPage}}&limit={{products.limit}}">Anterior</a>
+    {{/if}}
+    {{#if products.hasNextPage}}
+        <a href="/products?page={{products.nextPage}}&limit={{products.limit}}">Siguiente</a>
+    {{/if}}
+</div>
 
-    <div class="container" id="productsFeed">
-        {{#each products}}
-        <div class="product">
-            <h4>{{title}}</h4>
-            <img src="{{thumbnail}}" alt="imagen de {{title}}">
-            <div class="infoProduct">
-                <p>{{description}}</p>
-                <p>{{price}}</p>
-                <p>{{stock}}</p>
-                <p>{{code}}</p>
-            </div>
-        </div>
-        {{/each}}
-    </div>
-{{/content}}
+<script>
+    async function addToCart(productId, quantity) {
+        try {
+            console.log('Product ID:', productId);
+            console.log('Quantity:', quantity);
+
+            const cartIdMatch = document.cookie.match(/cartId=([^;]+)/);
+            const cartId = cartIdMatch ? cartIdMatch[1] : null;
+
+            let response;
+
+            if (!cartId) {
+                response = await fetch('/api/carts/create', { method: 'POST' });
+                const data = await response.json();
+
+                if (data.success) {
+                    document.cookie = `cartId=${data.cart._id}; path=/`;
+
+                    response = await fetch(`/api/carts/${data.cart._id}/products/${productId}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ quantity: parseInt(quantity, 10) }),
+                    });
+                } else {
+                    throw new Error('Error al crear el carrito.');
+                }
+            } else {
+                response = await fetch(`/api/carts/${cartId}/products/${productId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ quantity: parseInt(quantity, 10) }),
+                });
+            }
+
+            const data = await response.json();
+
+            if (!data.success) {
+                throw new Error('Error al agregar producto al carrito.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al agregar producto al carrito.');
+        }
+    }
+</script>
