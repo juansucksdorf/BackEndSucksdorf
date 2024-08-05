@@ -1,3 +1,4 @@
+require('dotenv').config(); 
 const express = require('express');
 const path = require('path');
 const { create } = require('express-handlebars');
@@ -5,9 +6,10 @@ const cookieParser = require('cookie-parser');
 const { connectMongoDB } = require('./src/config/mongoDb.config');
 const realTimeProductsRouter = require('./src/routes/realTimeProducts.router');
 
-// Crear instancia de Express
+//express
 const app = express();
-// Middleware para servir archivos estáticos
+
+// Middleware static
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -26,8 +28,7 @@ app.engine('handlebars', hbs.engine);
 app.set('views', path.join(__dirname, 'src/views'));
 app.set('view engine', 'handlebars');
 
-
-// Inicializar MongoDB
+// Inicia MongoDB
 connectMongoDB();
 
 // Rutas para las APIs
